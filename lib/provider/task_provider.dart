@@ -18,6 +18,11 @@ class TaskProvider with ChangeNotifier {
     notifyListeners(); // Notify the UI to update the specific item
   }
 
+  void addTask(Task task) {
+    _tasks.add(task);
+    notifyListeners();
+  }
+
   Task getTaskById(String id) {
     return _repository.getTaskById(id);
   }

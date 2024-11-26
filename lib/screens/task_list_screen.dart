@@ -1,21 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/model/task_model.dart';
 import 'package:flutter_application_1/provider/task_provider.dart';
+import 'package:flutter_application_1/screens/add_task_screen.dart';
 import 'package:provider/provider.dart';
-
 
 class TaskListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tasks = context.watch<TaskProvider>().tasks;
-return Scaffold(
+    return Scaffold(
       appBar: AppBar(
         title: const Text('Task Management'),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: () {
-              // Add new task functionality (to be implemented)
+            onPressed: () async {
+              // Navigate to AddTaskScreen and wait for result
+              final newTask = await Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => AddTaskScreen()),
+              );
+
+              if (newTask != null && newTask is Task) {
+                // Add the new task to the provider
+                context.read<TaskProvider>().addTask(newTask);
+              }
             },
           ),
         ],
@@ -33,6 +41,7 @@ return Scaffold(
     );
   }
 }
+
 class TaskCard extends StatelessWidget {
   final Task task;
 
