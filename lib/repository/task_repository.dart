@@ -22,7 +22,11 @@ class TaskRepository {
 
   List<Task> getTasks() => _tasks;
 
-  Task getTaskById(String id) {
+  Task getTaskById(int id) {
     return _tasks.firstWhere((task) => task.id == id);
+  }
+
+  void deleteTask(int id) {
+    _tasks.removeWhere((task) => task.id == id);
   }
 }

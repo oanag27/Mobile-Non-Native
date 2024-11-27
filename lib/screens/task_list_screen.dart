@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/model/task_model.dart';
 import 'package:flutter_application_1/provider/task_provider.dart';
 import 'package:flutter_application_1/screens/add_task_screen.dart';
+import 'package:flutter_application_1/screens/update_task_screen.dart';
 import 'package:provider/provider.dart';
 
 class TaskListScreen extends StatelessWidget {
@@ -96,10 +97,52 @@ class TaskCard extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 8), // Spacing between priority text and icon
-            const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+            //const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+            IconButton(
+              icon: const Icon(Icons.arrow_forward_ios,
+                  size: 16, color: Colors.grey),
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => UpdateTaskScreen(task: task),
+                  ),
+                );
+              },
+            ),
           ],
         ),
+        onTap: () => _showDeleteConfirmationDialog(
+            context, task), // Added onTap to show delete dialog
       ),
     );
   }
+}
+
+void _showDeleteConfirmationDialog(BuildContext context, Task task) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Delete Task'),
+        content: Text('Are you sure you want to delete "${task.title}"?'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+            },
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              context
+                  .read<TaskProvider>()
+                  .deleteTask(task.id); // Delete the task
+              Navigator.of(context).pop(); // Close the dialog
+            },
+            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      );
+    },
+  );
 }

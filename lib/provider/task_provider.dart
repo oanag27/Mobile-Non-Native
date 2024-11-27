@@ -12,7 +12,7 @@ class TaskProvider with ChangeNotifier {
 
   List<Task> get tasks => _tasks;
 
-  void toggleTaskCompletion(String id) {
+  void toggleTaskCompletion(int id) {
     final task = _tasks.firstWhere((task) => task.id == id);
     task.isCompleted = !task.isCompleted;
     notifyListeners(); // Notify the UI to update the specific item
@@ -23,7 +23,21 @@ class TaskProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Task getTaskById(String id) {
+  void deleteTask(int id) {
+    _repository.deleteTask(id); // Update the repository
+    _tasks.removeWhere((task) => task.id == id); // Update the provider's list
+    notifyListeners(); // Notify listeners to rebuild the UI
+  }
+
+  void updateTask(Task updatedTask) {
+    final index = _tasks.indexWhere((task) => task.id == updatedTask.id);
+    if (index != -1) {
+      _tasks[index] = updatedTask;
+      notifyListeners();
+    }
+  }
+
+  Task getTaskById(int id) {
     return _repository.getTaskById(id);
   }
 }
